@@ -24,18 +24,21 @@ public class World
 		background = new BufferedImageLoader().loadImage("/background.png");
 
 		addEntity(new Bottom(xPos, Window.HEIGHT, 350, 112, EntityID.Bottom));
+	}
 
-		addEntity(new Pipe(random.nextInt(700 - 350) + 350, Window.HEIGHT, 60, 345, EntityID.Pipe));
-		addEntity(new Pipe(random.nextInt(1200 - 1000) + 1000, Window.HEIGHT, 60, 345, EntityID.Pipe));
+	public void startGame()
+	{
+		addEntity(new Pipe(xPos + 350, Window.HEIGHT, 60, 345, EntityID.Pipe, false));
+		addEntity(new Pipe(xPos + 350, -50, 60, 345, EntityID.Pipe, true));
 	}
 
 	public void render(Graphics2D g, Camera camera)
 	{
 		createWorld(g);
 
-		for (int i = 0; i < entities.size(); i++)
+		for (Entity entity : entities)
 		{
-			entities.get(i).render(g);
+			entity.render(g);
 		}
 
 		if (xPos < Math.abs(camera.getX()))
@@ -46,9 +49,9 @@ public class World
 
 	public void update()
 	{
-		for (int i = 0; i < entities.size(); i++)
+		for (Entity entity : entities)
 		{
-			entities.get(i).update(entities);
+			entity.update(entities);
 		}
 	}
 
@@ -70,11 +73,11 @@ public class World
 		g.drawImage(background, null, xPos + 350, 0);
 		g.drawImage(background, null, xPos + 700, 0);
 
-		for (int i = 0; i < entities.size(); i++)
+		for (Entity entity : entities)
 		{
-			if (entities.get(i).getID() == EntityID.Bottom)
+			if (entity.getID() == EntityID.Bottom)
 			{
-				entities.get(i).x = xPos;
+				entity.x = xPos;
 			}
 		}
 	}

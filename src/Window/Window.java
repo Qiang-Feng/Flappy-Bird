@@ -62,15 +62,17 @@ public class Window extends Canvas
 
 			if (keyboard.getKeyCode() == KeyEvent.VK_ENTER)
 			{
+				started = true;
 				world.createWorld(g);
+				world.startGame();
 			}
 		}
 
-		for (int i = 0; i < world.entities.size(); i++)
+		for (Entity entity : world.entities)
 		{
-			if (world.entities.get(i).getID() == EntityID.Bird)
+			if (entity.getID() == EntityID.Bird)
 			{
-				camera.update(world.entities.get(i));
+				camera.update(entity);
 			}
 		}
 	}
@@ -79,6 +81,7 @@ public class Window extends Canvas
 	{
 		bs = getBufferStrategy();
 		g = (Graphics2D) bs.getDrawGraphics();
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
@@ -86,6 +89,16 @@ public class Window extends Canvas
 		g.translate(camera.getX(), camera.getY());
 
 		world.render(g, camera);
+
+		if (!started)
+		{
+			g.setFont(new Font("Arial", Font.PLAIN, 40));
+
+			g.setColor(new Color(50, 50, 50));
+			g.drawString("Press enter to start ...", -camera.getX() + 140 - 2, 150 + 2);
+			g.setColor(Color.WHITE);
+			g.drawString("Press enter to start ...", -camera.getX() + 140, 150);
+		}
 
 		g.translate(camera.getX(), camera.getY());
 

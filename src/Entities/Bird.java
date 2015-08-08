@@ -5,7 +5,6 @@ import Framework.Input.Keyboard;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -17,6 +16,7 @@ public class Bird extends Entity
 	private float yTerminalVelocity = 15;
 
 	private boolean started = false;
+	private boolean noJump = false;
 	private boolean ended = false;
 	private boolean continueUp = true;
 
@@ -24,7 +24,6 @@ public class Bird extends Entity
 
 	private Keyboard keyboard;
 	private BufferedImage[] images;
-	private AffineTransform transform;
 
 	private long lastTime;
 
@@ -53,7 +52,7 @@ public class Bird extends Entity
 		x += xVel;
 		y += yVel;
 
-		if (keyboard.isKeyDown() && !ended)
+		if (keyboard.isKeyDown() && !ended && !noJump)
 		{
 			if (keyboard.getKeyCode() == KeyEvent.VK_ENTER)
 			{
@@ -66,7 +65,7 @@ public class Bird extends Entity
 			}
 		}
 
-		if (keyboard.isKeyDown() && (keyboard.getKeyCode() == KeyEvent.VK_UP || keyboard.getKeyCode() == KeyEvent.VK_SPACE) && !ended && started)
+		if (keyboard.isKeyDown() && (keyboard.getKeyCode() == KeyEvent.VK_UP || keyboard.getKeyCode() == KeyEvent.VK_SPACE) && !ended && !noJump && started)
 		{
 			if (continueUp)
 			{
@@ -74,7 +73,7 @@ public class Bird extends Entity
 				jump();
 			}
 		}
-		else if (keyboard.isKeyDown() && !ended)
+		else if (keyboard.isKeyDown() && !ended && !noJump)
 		{
 			if (keyboard.getKeyCode() == KeyEvent.VK_ENTER)
 			{
@@ -97,9 +96,10 @@ public class Bird extends Entity
 			{
 				if (Physics.collision(this, entity))
 				{
+					noJump = true;
 					y = (int) entity.getBounds().getY() - this.height;
 
-					if (Math.abs(yVel) < 2.5)
+					if (Math.abs(yVel) < 4)
 					{
 						ended = true;
 
@@ -117,10 +117,30 @@ public class Bird extends Entity
 			{
 				if (Physics.collision(this, entity))
 				{
-					ended = true;
+					noJump = true;
 
-					yVel = 10;
-					xVel = 0;
+					if (Physics.collisionType(this, entity) == Physics.BOTTOM)
+					{
+						y = (int) entity.getBounds().getY() - this.height;
+						yVel = Physics.calculateReboundVelocity(this, entity, false);
+					}
+
+					switch (Physics.collisionType(this, entity))
+					{
+						case Physics.BOTTOM:
+							y = (int) entity.getBounds().getY() - this.height;
+							yVel = Physics.calculateReboundVelocity(this, entity, false);
+							break;
+
+						case Physics.TOP:
+							yVel = Physics.calculateReboundVelocity(this, entity, false);
+							y = (int) - entity.getBounds().getY() - this.height;
+							break;
+
+						case Physics.LEFT:
+							xVel = Physics.calculateReboundVelocity(this, entity, true);
+							break;
+					}
 				}
 			}
 		}
@@ -136,7 +156,7 @@ public class Bird extends Entity
 	{
 		final int delay = 150;
 
-		if (!ended)
+		if (!ended && !noJump)
 		{
 			if ((System.currentTimeMillis() - lastTime) > delay)
 			{
