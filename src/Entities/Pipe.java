@@ -11,10 +11,11 @@ import java.util.ArrayList;
 public class Pipe extends Entity
 {
 	private BufferedImage tubeImage;
+	private static float e = 0.5F;
 
 	public Pipe(int x, int y, int width, int height, EntityID id)
 	{
-		super(x, y - (height / 2), width, height, id);
+		super(x, y - (height / 2), width, height, id, e);
 		tubeImage = new BufferedImageLoader().loadImage("/pipe.png");
 	}
 

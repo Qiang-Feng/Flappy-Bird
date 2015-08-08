@@ -12,6 +12,8 @@ public abstract class Entity
 	protected int width;
 	protected int height;
 
+	public float e;
+
 	public Entity(int x, int y, int width, int height, EntityID id)
 	{
 		this.x = x;
@@ -19,6 +21,16 @@ public abstract class Entity
 		this.width = width;
 		this.height = height;
 		this.id = id;
+	}
+
+	public Entity(int x, int y, int width, int height, EntityID id, float e)
+	{
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.id = id;
+		this.e = e;
 	}
 
 	public EntityID getID()

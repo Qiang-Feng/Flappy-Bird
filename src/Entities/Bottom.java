@@ -11,10 +11,11 @@ import java.util.ArrayList;
 public class Bottom extends Entity
 {
 	private BufferedImage ground;
+	private static float e = 0.5F;
 
 	public Bottom(int x, int y, int width, int height, EntityID id)
 	{
-		super(x, y - (height / 2), width, height, id);
+		super(x, y - (height / 2), width, height, id, e);
 		ground = new BufferedImageLoader().loadImage("/ground.png");
 	}
 

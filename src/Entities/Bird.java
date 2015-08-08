@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class Bird extends Entity
 {
 	private float gravity = 0.7F;
-	private float xVel = 2;
-	private float yVel = 0;
+	public float xVel = 2;
+	public float yVel = 0;
 	private float yTerminalVelocity = 15;
 
 	private boolean started = false;
@@ -91,24 +91,31 @@ public class Bird extends Entity
 			continueUp = true;
 		}
 
-		for (int i = 0; i < entities.size(); i++)
+		for (Entity entity : entities)
 		{
-			if (entities.get(i).getID() == EntityID.Bottom)
+			if (entity.getID() == EntityID.Bottom)
 			{
-				if (Physics.collision(this, entities.get(i)))
+				if (Physics.collision(this, entity))
 				{
-					ended = true;
+					y = (int) entity.getBounds().getY() - this.height;
 
-					yVel = 0;
-					xVel = 0;
+					if (Math.abs(yVel) < 2.5)
+					{
+						ended = true;
 
-					y = (int) entities.get(i).getBounds().getY() - this.height;
+						xVel = 0;
+						yVel = 0;
+					}
+					else
+					{
+						yVel = Physics.calculateReboundVelocity(this, entity, false);
+					}
 				}
 			}
 
-			if (entities.get(i).getID() == EntityID.Pipe)
+			if (entity.getID() == EntityID.Pipe)
 			{
-				if (Physics.collision(this, entities.get(i)))
+				if (Physics.collision(this, entity))
 				{
 					ended = true;
 
