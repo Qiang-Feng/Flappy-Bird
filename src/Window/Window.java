@@ -60,7 +60,7 @@ public class Window extends Canvas
 				System.exit(0);
 			}
 
-			if (keyboard.getKeyCode() == KeyEvent.VK_ENTER)
+			if (keyboard.getKeyCode() == KeyEvent.VK_ENTER && !started)
 			{
 				started = true;
 				world.createWorld(g);

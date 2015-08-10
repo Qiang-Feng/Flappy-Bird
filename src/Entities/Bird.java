@@ -18,6 +18,7 @@ public class Bird extends Entity
 	private boolean started = false;
 	private boolean noJump = false;
 	private boolean ended = false;
+	private boolean pause = false;
 	private boolean continueUp = true;
 
 	private int currentImg = 0;
@@ -44,102 +45,103 @@ public class Bird extends Entity
 	@Override
 	public void update(ArrayList<Entity> entities)
 	{
-		if ((yVel < yTerminalVelocity) && !ended && started)
+		if (!pause)
 		{
-			yVel += gravity;
-		}
-
-		x += xVel;
-		y += yVel;
-
-		if (keyboard.isKeyDown() && !ended && !noJump)
-		{
-			if (keyboard.getKeyCode() == KeyEvent.VK_ENTER)
+			if ((yVel < yTerminalVelocity) && !ended && started)
 			{
-				started = true;
+				yVel += gravity;
+			}
+
+			x += xVel;
+			y += yVel;
+
+			if (keyboard.isKeyDown() && !ended && !noJump)
+			{
+				if (keyboard.getKeyCode() == KeyEvent.VK_ENTER)
+				{
+					started = true;
+					if (continueUp)
+					{
+						continueUp = false;
+						jump();
+					}
+				}
+			}
+
+			if (keyboard.isKeyDown() && (keyboard.getKeyCode() == KeyEvent.VK_UP || keyboard.getKeyCode() == KeyEvent.VK_SPACE) && !ended && !noJump && started)
+			{
 				if (continueUp)
 				{
 					continueUp = false;
 					jump();
 				}
 			}
-		}
-
-		if (keyboard.isKeyDown() && (keyboard.getKeyCode() == KeyEvent.VK_UP || keyboard.getKeyCode() == KeyEvent.VK_SPACE) && !ended && !noJump && started)
-		{
-			if (continueUp)
+			else if (keyboard.isKeyDown() && !ended && !noJump)
 			{
-				continueUp = false;
-				jump();
-			}
-		}
-		else if (keyboard.isKeyDown() && !ended && !noJump)
-		{
-			if (keyboard.getKeyCode() == KeyEvent.VK_ENTER)
-			{
-				started = true;
-				if (continueUp)
+				if (keyboard.getKeyCode() == KeyEvent.VK_ENTER)
 				{
-					continueUp = false;
-					jump();
-				}
-			}
-		}
-		else
-		{
-			continueUp = true;
-		}
-
-		for (Entity entity : entities)
-		{
-			if (entity.getID() == EntityID.Bottom)
-			{
-				if (Physics.collision(this, entity))
-				{
-					noJump = true;
-					y = (int) entity.getBounds().getY() - this.height;
-
-					if (Math.abs(yVel) < 4)
+					started = true;
+					if (continueUp)
 					{
-						ended = true;
-
-						xVel = 0;
-						yVel = 0;
-					}
-					else
-					{
-						yVel = Physics.calculateReboundVelocity(this, entity, false);
+						continueUp = false;
+						jump();
 					}
 				}
 			}
-
-			if (entity.getID() == EntityID.Pipe)
+			else
 			{
-				if (Physics.collision(this, entity))
-				{
-					noJump = true;
+				continueUp = true;
+			}
 
-					if (Physics.collisionType(this, entity) == Physics.BOTTOM)
+			for (Entity entity : entities)
+			{
+				if (entity.getID() == EntityID.Bottom)
+				{
+					if (Physics.collision(this, entity))
 					{
+						noJump = true;
+
 						y = (int) entity.getBounds().getY() - this.height;
-						yVel = Physics.calculateReboundVelocity(this, entity, false);
+
+						if (Math.abs(yVel) < 4)
+						{
+							ended = true;
+
+							xVel = 0;
+							yVel = 0;
+						}
+						else
+						{
+							yVel = Physics.calculateReboundVelocity(this, entity, false);
+						}
 					}
+				}
 
-					switch (Physics.collisionType(this, entity))
+				if (entity.getID() == EntityID.Pipe)
+				{
+					if (Physics.collision(this, entity))
 					{
-						case Physics.BOTTOM:
-							y = (int) entity.getBounds().getY() - this.height;
-							yVel = Physics.calculateReboundVelocity(this, entity, false);
-							break;
+						noJump = true;
 
-						case Physics.TOP:
-							yVel = Physics.calculateReboundVelocity(this, entity, false);
-							y = (int) - entity.getBounds().getY() - this.height;
-							break;
+						switch (Physics.collisionType(this, entity))
+						{
+							case Physics.BOTTOM:
+								y = (int) entity.getBounds().getY() - this.height;
+								yVel = Physics.calculateReboundVelocity(this, entity, false);
+								break;
 
-						case Physics.LEFT:
-							xVel = Physics.calculateReboundVelocity(this, entity, true);
-							break;
+							case Physics.TOP:
+								y = (int) - entity.getBounds().getY() - 100;
+								yVel = Physics.calculateReboundVelocity(this, entity, false);
+								break;
+
+							case Physics.LEFT:
+								xVel = Physics.calculateReboundVelocity(this, entity, true);
+								break;
+
+							default:
+								System.out.println("Error!");
+						}
 					}
 				}
 			}
