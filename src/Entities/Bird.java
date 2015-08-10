@@ -1,6 +1,7 @@
 package Entities;
 
 import Framework.*;
+import Window.Window;
 import Framework.Input.Keyboard;
 
 import java.awt.*;
@@ -15,7 +16,6 @@ public class Bird extends Entity
 	public float yVel = 0;
 	private float yTerminalVelocity = 15;
 
-	private boolean started = false;
 	private boolean noJump = false;
 	private boolean ended = false;
 	private boolean pause = false;
@@ -47,7 +47,7 @@ public class Bird extends Entity
 	{
 		if (!pause)
 		{
-			if ((yVel < yTerminalVelocity) && !ended && started)
+			if ((yVel < yTerminalVelocity) && !ended && Window.started)
 			{
 				yVel += gravity;
 			}
@@ -59,7 +59,6 @@ public class Bird extends Entity
 			{
 				if (keyboard.getKeyCode() == KeyEvent.VK_ENTER)
 				{
-					started = true;
 					if (continueUp)
 					{
 						continueUp = false;
@@ -68,7 +67,7 @@ public class Bird extends Entity
 				}
 			}
 
-			if (keyboard.isKeyDown() && (keyboard.getKeyCode() == KeyEvent.VK_UP || keyboard.getKeyCode() == KeyEvent.VK_SPACE) && !ended && !noJump && started)
+			if (keyboard.isKeyDown() && (keyboard.getKeyCode() == KeyEvent.VK_UP || keyboard.getKeyCode() == KeyEvent.VK_SPACE) && !ended && !noJump)
 			{
 				if (continueUp)
 				{
@@ -80,7 +79,6 @@ public class Bird extends Entity
 			{
 				if (keyboard.getKeyCode() == KeyEvent.VK_ENTER)
 				{
-					started = true;
 					if (continueUp)
 					{
 						continueUp = false;
@@ -123,6 +121,14 @@ public class Bird extends Entity
 					{
 						noJump = true;
 
+						if (Math.abs(yVel) < 4)
+						{
+							ended = true;
+
+							xVel = 0;
+							yVel = 0;
+						}
+
 						switch (Physics.collisionType(this, entity))
 						{
 							case Physics.BOTTOM:
@@ -131,7 +137,7 @@ public class Bird extends Entity
 								break;
 
 							case Physics.TOP:
-								y = (int) - entity.getBounds().getY() - 100;
+								y = (int) entity.getBounds().getY() + Window.HEIGHT - this.height * 3;
 								yVel = Physics.calculateReboundVelocity(this, entity, false);
 								break;
 

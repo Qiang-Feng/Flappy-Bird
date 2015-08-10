@@ -24,7 +24,7 @@ public class Window extends Canvas
 	private World world;
 	private Camera camera;
 
-	private boolean started = false;
+	public static boolean started = false;
 
 	public Window()
 	{

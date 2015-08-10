@@ -26,6 +26,7 @@ public class World
 	{
 		random = new Random();
 		loader = new BufferedImageLoader();
+
 		background = loader.loadImage("/background.png");
 		ground = loader.loadImage("/ground.png");
 
@@ -34,14 +35,15 @@ public class World
 
 	public void startGame()
 	{
-		addEntity(new Pipe(xPosLive + Window.WIDTH, Window.HEIGHT, 60, 345, EntityID.Pipe, false));
-		addEntity(new Pipe(xPosLive + Window.WIDTH, -50, 60, 345, EntityID.Pipe, true));
+		addPipe(xPosLive + Window.WIDTH);
 	}
 
 	public void addPipe(int position)
 	{
-		addEntity(new Pipe(position, Window.HEIGHT, 60, 345, EntityID.Pipe, false));
-		addEntity(new Pipe(position, -50, 60, 345, EntityID.Pipe, true));
+		int variance = random.nextInt(100 - 0 + 1) + 0;
+
+		addEntity(new Pipe(position, Window.HEIGHT + variance - 25, 60, 345, EntityID.Pipe, false));
+		addEntity(new Pipe(position, variance - 75, 60, 345, EntityID.Pipe, true));
 	}
 
 	public void render(Graphics2D g, Camera camera)
@@ -53,12 +55,17 @@ public class World
 			entity.render(g);
 		}
 
+		xPosLive = (int) Math.abs(camera.getX());
+
 		if (xPos < Math.abs(camera.getX()))
 		{
 			xPos += 350;
-		}
 
-		xPosLive = (int) Math.abs(camera.getX());
+			if (Window.started)
+			{
+				addPipe(xPosLive + Window.WIDTH);
+			}
+		}
 	}
 
 	public void update()
