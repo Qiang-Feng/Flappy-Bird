@@ -25,6 +25,7 @@ public class Window extends Canvas
 	private Camera camera;
 
 	public static boolean started = false;
+	public static int score = 0;
 
 	public Window()
 	{
@@ -64,7 +65,6 @@ public class Window extends Canvas
 			{
 				started = true;
 				world.createWorld(g);
-				world.startGame();
 			}
 		}
 
@@ -85,6 +85,7 @@ public class Window extends Canvas
 
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
+		g.setFont(new Font("Arial", Font.PLAIN, 40));
 
 		g.translate(camera.getX(), camera.getY());
 
@@ -92,12 +93,17 @@ public class Window extends Canvas
 
 		if (!started)
 		{
-			g.setFont(new Font("Arial", Font.PLAIN, 40));
-
 			g.setColor(new Color(50, 50, 50));
 			g.drawString("Press enter to start ...", -camera.getX() + 140 - 2, 150 + 2);
 			g.setColor(Color.WHITE);
 			g.drawString("Press enter to start ...", -camera.getX() + 140, 150);
+		}
+		else
+		{
+			g.setColor(new Color(50, 50, 50));
+			g.drawString(Integer.toString(score), -camera.getX() + 30 - 2, 50 + 2);
+			g.setColor(Color.WHITE);
+			g.drawString(Integer.toString(score), -camera.getX() + 30, 50);
 		}
 
 		g.translate(camera.getX(), camera.getY());

@@ -4,5 +4,6 @@ public enum EntityID
 {
 	Bird(),
 	Pipe(),
-	Bottom();
+	Checkpoint(),
+	Bottom()
 }

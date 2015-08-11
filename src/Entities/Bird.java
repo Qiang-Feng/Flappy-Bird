@@ -20,6 +20,7 @@ public class Bird extends Entity
 	private boolean ended = false;
 	private boolean pause = false;
 	private boolean continueUp = true;
+	private boolean noIncrement = false;
 
 	private int currentImg = 0;
 
@@ -67,7 +68,7 @@ public class Bird extends Entity
 				}
 			}
 
-			if (keyboard.isKeyDown() && (keyboard.getKeyCode() == KeyEvent.VK_UP || keyboard.getKeyCode() == KeyEvent.VK_SPACE) && !ended && !noJump)
+			if (keyboard.isKeyDown() && (keyboard.getKeyCode() == KeyEvent.VK_UP || keyboard.getKeyCode() == KeyEvent.VK_SPACE) && !ended && !noJump && Window.started)
 			{
 				if (continueUp)
 				{
@@ -121,14 +122,6 @@ public class Bird extends Entity
 					{
 						noJump = true;
 
-						if (Math.abs(yVel) < 4)
-						{
-							ended = true;
-
-							xVel = 0;
-							yVel = 0;
-						}
-
 						switch (Physics.collisionType(this, entity))
 						{
 							case Physics.BOTTOM:
@@ -147,6 +140,27 @@ public class Bird extends Entity
 
 							default:
 								System.out.println("Error!");
+						}
+					}
+				}
+
+				if (entity.getID() == EntityID.Checkpoint)
+				{
+					if (Physics.collision(this, entity) && !noJump)
+					{
+						switch (Physics.collisionType(this, entity))
+						{
+							case Physics.LEFT:
+								if (!noIncrement)
+								{
+									Window.score += 1;
+									noIncrement = true;
+								}
+								break;
+
+							default:
+								noIncrement = false;
+								break;
 						}
 					}
 				}

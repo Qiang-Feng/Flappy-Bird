@@ -1,6 +1,7 @@
 package Framework;
 
 import Entities.Bottom;
+import Entities.Checkpoint;
 import Entities.Pipe;
 import Window.Window;
 
@@ -33,17 +34,13 @@ public class World
 		addEntity(new Bottom(xPosLive, Window.HEIGHT, 350, 112, EntityID.Bottom));
 	}
 
-	public void startGame()
-	{
-		addPipe(xPosLive + Window.WIDTH);
-	}
-
 	public void addPipe(int position)
 	{
-		int variance = random.nextInt(100 - 0 + 1) + 0;
+		int variance = random.nextInt(101);
 
 		addEntity(new Pipe(position, Window.HEIGHT + variance - 25, 60, 345, EntityID.Pipe, false));
 		addEntity(new Pipe(position, variance - 75, 60, 345, EntityID.Pipe, true));
+		addEntity(new Checkpoint(position + 55, Window.HEIGHT + variance - 352, 4, 154, EntityID.Checkpoint));
 	}
 
 	public void render(Graphics2D g, Camera camera)
