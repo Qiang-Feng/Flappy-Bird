@@ -11,194 +11,194 @@ import java.util.ArrayList;
 
 public class Bird extends Entity
 {
-	private float gravity = 0.7F;
-	public float xVel = 2;
-	public float yVel = 0;
-	private float yTerminalVelocity = 15;
+    private float gravity = 0.7F;
+    public float xVel = 2;
+    public float yVel = 0;
+    private float yTerminalVelocity = 15;
 
-	private boolean noJump = false;
-	private boolean ended = false;
-	private boolean pause = false;
-	private boolean continueUp = true;
-	private boolean noIncrement = false;
+    private boolean noJump = false;
+    private boolean ended = false;
+    private boolean pause = false;
+    private boolean continueUp = true;
+    private boolean noIncrement = false;
 
-	private int currentImg = 0;
+    private int currentImg = 0;
 
-	private Keyboard keyboard;
-	private BufferedImage[] images;
+    private Keyboard keyboard;
+    private BufferedImage[] images;
 
-	private long lastTime;
+    private long lastTime;
 
-	public Bird(int x, int y, int width, int height, EntityID id, Keyboard keyboard)
-	{
-		super(x, y, width, height, id);
+    public Bird(int x, int y, int width, int height, EntityID id, Keyboard keyboard)
+    {
+        super(x, y, width, height, id);
 
-		this.keyboard = keyboard;
+        this.keyboard = keyboard;
 
-		images = new BufferedImage[3];
-		images[0] = new BufferedImageLoader().loadImage("/birdFirst.png");
-		images[1] = new BufferedImageLoader().loadImage("/birdSecond.png");
-		images[2] = new BufferedImageLoader().loadImage("/birdThird.png");
+        images = new BufferedImage[3];
+        images[0] = new BufferedImageLoader().loadImage("/birdFirst.png");
+        images[1] = new BufferedImageLoader().loadImage("/birdSecond.png");
+        images[2] = new BufferedImageLoader().loadImage("/birdThird.png");
 
-		lastTime = System.currentTimeMillis();
-	}
+        lastTime = System.currentTimeMillis();
+    }
 
-	@Override
-	public void update(ArrayList<Entity> entities)
-	{
-		if (!pause)
-		{
-			if ((yVel < yTerminalVelocity) && !ended && Window.started)
-			{
-				yVel += gravity;
-			}
+    @Override
+    public void update(ArrayList<Entity> entities)
+    {
+        if (!pause)
+        {
+            if ((yVel < yTerminalVelocity) && !ended && Window.started)
+            {
+                yVel += gravity;
+            }
 
-			x += xVel;
-			y += yVel;
+            x += xVel;
+            y += yVel;
 
-			if (keyboard.isKeyDown() && !ended && !noJump)
-			{
-				if (keyboard.getKeyCode() == KeyEvent.VK_ENTER)
-				{
-					if (continueUp)
-					{
-						continueUp = false;
-						jump();
-					}
-				}
-			}
+            if (keyboard.isKeyDown() && !ended && !noJump)
+            {
+                if (keyboard.getKeyCode() == KeyEvent.VK_ENTER)
+                {
+                    if (continueUp)
+                    {
+                        continueUp = false;
+                        jump();
+                    }
+                }
+            }
 
-			if (keyboard.isKeyDown() && (keyboard.getKeyCode() == KeyEvent.VK_UP || keyboard.getKeyCode() == KeyEvent.VK_SPACE) && !ended && !noJump && Window.started)
-			{
-				if (continueUp)
-				{
-					continueUp = false;
-					jump();
-				}
-			}
-			else if (keyboard.isKeyDown() && !ended && !noJump)
-			{
-				if (keyboard.getKeyCode() == KeyEvent.VK_ENTER)
-				{
-					if (continueUp)
-					{
-						continueUp = false;
-						jump();
-					}
-				}
-			}
-			else
-			{
-				continueUp = true;
-			}
+            if (keyboard.isKeyDown() && (keyboard.getKeyCode() == KeyEvent.VK_UP || keyboard.getKeyCode() == KeyEvent.VK_SPACE) && !ended && !noJump && Window.started)
+            {
+                if (continueUp)
+                {
+                    continueUp = false;
+                    jump();
+                }
+            }
+            else if (keyboard.isKeyDown() && !ended && !noJump)
+            {
+                if (keyboard.getKeyCode() == KeyEvent.VK_ENTER)
+                {
+                    if (continueUp)
+                    {
+                        continueUp = false;
+                        jump();
+                    }
+                }
+            }
+            else
+            {
+                continueUp = true;
+            }
 
-			for (Entity entity : entities)
-			{
-				if (entity.getID() == EntityID.Bottom)
-				{
-					if (Physics.collision(this, entity))
-					{
-						noJump = true;
+            for (Entity entity : entities)
+            {
+                if (entity.getID() == EntityID.Bottom)
+                {
+                    if (Physics.collision(this, entity))
+                    {
+                        noJump = true;
 
-						y = (int) entity.getBounds().getY() - this.height;
+                        y = (int) entity.getBounds().getY() - this.height;
 
-						if (Math.abs(yVel) < 4)
-						{
-							ended = true;
+                        if (Math.abs(yVel) < 4)
+                        {
+                            ended = true;
 
-							xVel = 0;
-							yVel = 0;
-						}
-						else
-						{
-							yVel = Physics.calculateReboundVelocity(this, entity, false);
-						}
-					}
-				}
+                            xVel = 0;
+                            yVel = 0;
+                        }
+                        else
+                        {
+                            yVel = Physics.calculateReboundVelocity(this, entity, false);
+                        }
+                    }
+                }
 
-				if (entity.getID() == EntityID.Pipe)
-				{
-					if (Physics.collision(this, entity))
-					{
-						noJump = true;
+                if (entity.getID() == EntityID.Pipe)
+                {
+                    if (Physics.collision(this, entity))
+                    {
+                        noJump = true;
 
-						switch (Physics.collisionType(this, entity))
-						{
-							case Physics.BOTTOM:
-								y = (int) entity.getBounds().getY() - this.height;
-								yVel = Physics.calculateReboundVelocity(this, entity, false);
-								break;
+                        switch (Physics.collisionType(this, entity))
+                        {
+                            case Physics.BOTTOM:
+                                y = (int) entity.getBounds().getY() - this.height;
+                                yVel = Physics.calculateReboundVelocity(this, entity, false);
+                                break;
 
-							case Physics.TOP:
-								y = (int) entity.getBounds().getY() + Window.HEIGHT - this.height * 3;
-								yVel = Physics.calculateReboundVelocity(this, entity, false);
-								break;
+                            case Physics.TOP:
+                                y = (int) entity.getBounds().getY() + Window.HEIGHT - this.height * 3;
+                                yVel = Physics.calculateReboundVelocity(this, entity, false);
+                                break;
 
-							case Physics.LEFT:
-								xVel = Physics.calculateReboundVelocity(this, entity, true);
-								break;
+                            case Physics.LEFT:
+                                xVel = Physics.calculateReboundVelocity(this, entity, true);
+                                break;
 
-							default:
-								System.out.println("Error!");
-						}
-					}
-				}
+                            default:
+                                System.out.println("Error!");
+                        }
+                    }
+                }
 
-				if (entity.getID() == EntityID.Checkpoint)
-				{
-					if (Physics.collision(this, entity) && !noJump)
-					{
-						switch (Physics.collisionType(this, entity))
-						{
-							case Physics.LEFT:
-								if (!noIncrement)
-								{
-									Window.score += 1;
-									noIncrement = true;
-								}
-								break;
+                if (entity.getID() == EntityID.Checkpoint)
+                {
+                    if (Physics.collision(this, entity) && !noJump)
+                    {
+                        switch (Physics.collisionType(this, entity))
+                        {
+                            case Physics.LEFT:
+                                if (!noIncrement)
+                                {
+                                    Window.score += 1;
+                                    noIncrement = true;
+                                }
+                                break;
 
-							default:
-								noIncrement = false;
-								break;
-						}
-					}
-				}
-			}
-		}
-	}
+                            default:
+                                noIncrement = false;
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-	private void jump()
-	{
-		yVel = -10;
-	}
+    private void jump()
+    {
+        yVel = -10;
+    }
 
-	@Override
-	public void render(Graphics2D g)
-	{
-		final int delay = 150;
+    @Override
+    public void render(Graphics2D g)
+    {
+        final int delay = 150;
 
-		if (!ended && !noJump)
-		{
-			if ((System.currentTimeMillis() - lastTime) > delay)
-			{
-				if (currentImg < 2)
-				{
-					currentImg += 1;
-				}
-				else
-				{
-					currentImg = 0;
-				}
+        if (!ended && !noJump)
+        {
+            if ((System.currentTimeMillis() - lastTime) > delay)
+            {
+                if (currentImg < 2)
+                {
+                    currentImg += 1;
+                }
+                else
+                {
+                    currentImg = 0;
+                }
 
-				lastTime += delay;
-			}
-		}
-		else
-		{
-			currentImg = 0;
-		}
+                lastTime += delay;
+            }
+        }
+        else
+        {
+            currentImg = 0;
+        }
 
-		g.drawImage(images[currentImg], null, x, y);
-	}
+        g.drawImage(images[currentImg], null, x, y);
+    }
 }

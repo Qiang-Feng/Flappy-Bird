@@ -2,8 +2,8 @@ package Framework;
 
 public enum EntityID
 {
-	Bird(),
-	Pipe(),
-	Checkpoint(),
-	Bottom()
+    Bird(),
+    Pipe(),
+    Checkpoint(),
+    Bottom()
 }

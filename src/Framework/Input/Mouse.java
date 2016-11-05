@@ -5,56 +5,56 @@ import java.awt.event.MouseListener;
 
 public class Mouse implements MouseListener
 {
-	private boolean buttonDown = false;
+    private boolean buttonDown = false;
 
-	private int x;
-	private int y;
+    private int x;
+    private int y;
 
-	@Override
-	public void mouseClicked(MouseEvent e)
-	{
+    @Override
+    public void mouseClicked(MouseEvent e)
+    {
 
-	}
+    }
 
-	@Override
-	public void mousePressed(MouseEvent e)
-	{
-		buttonDown = true;
+    @Override
+    public void mousePressed(MouseEvent e)
+    {
+        buttonDown = true;
 
-		x = e.getX();
-		y = e.getY();
-	}
+        x = e.getX();
+        y = e.getY();
+    }
 
-	@Override
-	public void mouseReleased(MouseEvent e)
-	{
-		buttonDown = false;
-	}
+    @Override
+    public void mouseReleased(MouseEvent e)
+    {
+        buttonDown = false;
+    }
 
-	@Override
-	public void mouseEntered(MouseEvent e)
-	{
+    @Override
+    public void mouseEntered(MouseEvent e)
+    {
 
-	}
+    }
 
-	@Override
-	public void mouseExited(MouseEvent e)
-	{
+    @Override
+    public void mouseExited(MouseEvent e)
+    {
 
-	}
+    }
 
-	public boolean isButtonDown()
-	{
-		return buttonDown;
-	}
+    public boolean isButtonDown()
+    {
+        return buttonDown;
+    }
 
-	public int getX()
-	{
-		return x;
-	}
+    public int getX()
+    {
+        return x;
+    }
 
-	public int getY()
-	{
-		return y;
-	}
+    public int getY()
+    {
+        return y;
+    }
 }
