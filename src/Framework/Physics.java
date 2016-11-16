@@ -16,40 +16,20 @@ public class Physics
 
     public static int collisionType(Entity a, Entity b)
     {
+        // Using answer from http://gamedev.stackexchange.com/a/29796
         float wy = (a.width + b.width) * ((a.y + (a.height / 2)) - (b.y + (b.height / 2)));
         float hx = (a.height + b.height) * ((a.x + (a.width / 2)) - (b.x + (b.width / 2)));
 
         if (wy > hx)
         {
-            if (wy > -hx)
-            {
-                return TOP;
-            }
-            else
-            {
-                return LEFT;
-            }
+            return (wy > -hx) ? TOP : LEFT;
         }
-        else
-        {
-            if (wy > -hx)
-            {
-                return RIGHT;
-            }
-            else
-            {
-                return BOTTOM;
-            }
-        }
+
+        return (wy > -hx) ? RIGHT : BOTTOM;
     }
 
     public static float calculateReboundVelocity(Bird bird, Entity surface, boolean horizontal)
     {
-        if (horizontal)
-        {
-            return (-surface.e * bird.xVel);
-        }
-
-        return (-surface.e * bird.yVel);
+        return (horizontal) ? (-surface.e * bird.xVel) : (-surface.e * bird.yVel);
     }
 }
